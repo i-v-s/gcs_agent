@@ -54,10 +54,9 @@ GCSAgent::GCSAgent(ros::NodeHandle &nh): _infoRate(5)
 void GCSAgent::publishRosInfo()
 {
     mavlink_message_t msg;
-    mavlink_ros_info_t ros_info;
-    gethostname(ros_info.host, sizeof(ros_info.host));
-    ros_info.state = 1;
-    mavlink_msg_ros_info_encode(0, 0, &msg, &ros_info);
+    char host[20];
+    gethostname(host, sizeof(host));
+    mavlink_msg_ros_info_pack_chan(0, 0, 0, &msg, 1, host, 1);
     send(msg);
 }
 
