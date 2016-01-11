@@ -1,0 +1,40 @@
+<?xml version='1.0'?>
+<mavlink>
+	<version>3</version>
+	<enums>
+		<enum name="ROS_NODE_STATE">
+			<description>Enumerates the state of the ROS node</description>
+			<entry value="0" name="ROS_NODE_DOWN">
+				<description>ROS Node is not working</description>
+			</entry>
+			<entry value="1" name="ROS_NODE_OK">
+				<description>ROS Node is working and responsible</description>
+			</entry>
+		</enum>
+	</enums>
+	<messages>
+		<message id="230" name="ROS_INFO">
+			<field name="state" type="uint8_t">State of the ROS</field>
+			<field name="host" type="char[16]">Name of the host</field>
+			<!--<field name="name" type="char[16]">Name of the ROS </field>-->
+			<field name="node_count" type="uint8_t">Total count of nodes</field>
+		</message>
+		<message id="231" name="ROS_NODE_STATE">
+			<field name="node_id" type="uint8_t">Number of node</field>
+			<field name="state" type="uint8_t">Current state of node</field>
+		</message>
+		<message id="232" name="RPG_SVO_INFO">
+			<description>Information about state of rpg_svo node. Reproduction of svo_msgs/Info.msg</description>
+			<!--Header      header-->
+			<field type="float" name="processing_time">Processing time</field>
+			<!--int32[]     keyframes-->
+			<field type="uint16_t" name="num_matches">Number of matches</field>
+			<field type="uint16_t" name="tracking_quality">Tracking quality</field>
+			<field type="uint8_t" name="stage">Current stage of node</field>		
+		</message>
+		<message id="233" name="RPG_SVO_KEY">
+			<description>Command key for rpg_svo node.</description>
+			<field type="char" name="key">Command key for rpg_svo node.</field>
+		</message>
+	</messages>
+</mavlink>
