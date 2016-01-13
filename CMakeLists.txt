@@ -31,6 +31,8 @@ catkin_package(
   DEPENDS Boost Eigen
 )
 
+add_definitions(-DMAVLINK_DIALECT=ardupilotmega)
+
 include_directories(
 	${catkin_INCLUDE_DIRS}
 	${Eigen_INCLUDE_DIRS}

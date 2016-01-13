@@ -1,7 +1,7 @@
 #include "svo.h"
 #include <std_msgs/String.h>
 #include "gcsagent.h"
-#include "mavlink/ros/mavlink.h"
+#include "mavlink_c/v1.0/ardupilotmega/mavlink.h"
 
 SVO::SVO(ros::NodeHandle & nh, GCSAgent * agent):
     GCSAgentPlugin(agent, MAVLINK_MSG_ID_RPG_SVO_KEY)

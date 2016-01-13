@@ -3,7 +3,7 @@
 #include <map>
 #include <ros/ros.h>
 #include <mavros_msgs/Mavlink.h>
-#include "mavlink/ros/mavlink.h"
+#include "mavlink_c/v1.0/ardupilotmega/mavlink.h"
 
 class GCSAgent;
 
@@ -32,6 +32,7 @@ private:
 public:
     void onMavlink(const mavros_msgs::Mavlink::ConstPtr rmsg);
     void spin(void);
+    void testMavlink(void);
     GCSAgent(ros::NodeHandle &nh);
 };
 
