@@ -3,7 +3,7 @@
 #include <map>
 #include <ros/ros.h>
 #include <mavros_msgs/Mavlink.h>
-#include "mavlink_c/v1.0/ardupilotmega/mavlink.h"
+#include <mavlink/v1.0/ardupilotmega/mavlink.h>
 
 class GCSAgent;
 

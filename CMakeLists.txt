@@ -14,6 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
 	sensor_msgs
 	geometry_msgs
         sensor_fusion_comm
+        mavlink
+        libmavconn
         mavros_msgs
 	svo_msgs
 	glog_catkin
@@ -38,7 +40,7 @@ include_directories(
 	${Eigen_INCLUDE_DIRS}
 )
 
-add_executable(gcs_agent main.cpp gcsagent.cpp svo.cpp msf.cpp) #mavros.cpp)
+add_executable(gcs_agent main.cpp gcsagent.cpp launcher.cpp svo.cpp msf.cpp) #mavros.cpp)
 #add_dependencies(gcs_agent mavros_msgs)
 add_dependencies(gcs_agent mavros_msgs_generate_messages_cpp)
 add_dependencies(gcs_agent geometry_msgs_generate_messages_cpp)

@@ -1,3 +1,0 @@
-[submodule "mavlink_c"]
-	path = mavlink_c
-	url = https://github.com/i-v-s/mavlink_c.git
