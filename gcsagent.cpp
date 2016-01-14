@@ -18,8 +18,13 @@ void GCSAgent::testMavlink(void)
     // Create ros_info
     mavlink_message_t mmsg;
     char host[32];
+    int hostId = 0;
     gethostname(host, sizeof(host));
-    mavlink_msg_ros_info_pack_chan(1, 1, 0, &mmsg, 1, host, 1);
+    mavlink_msg_ros_info_pack_chan(1, 1, 0, &mmsg,
+                                   hostId,
+                                   1,
+                                   host,
+                                   1);
 
     send(mmsg);
     //>>>> mavlink_message_t mmsg
@@ -55,18 +60,16 @@ void GCSAgent::subscribe(uint8_t msgid, GCSAgentPlugin * plugin)
     _plugins.insert(std::make_pair(msgid, plugin));
 }
 
-
 void GCSAgent::onMavlink(const mavros_msgs::Mavlink::ConstPtr rmsg)
 {
     mavlink_message_t mmsg;
 
     if (mavros_msgs::mavlink::convert(*rmsg, mmsg))
     {
-        printf("msgid: %d", mmsg.msgid);
+        //ROS_INFO("msgid: %d", mmsg.msgid);
         auto plugin = _plugins.find(mmsg.msgid);
         if(plugin != _plugins.end())
             plugin->second->onMessage(mmsg);
-        //gcs_link->send_message(&mmsg, rmsg->sysid, rmsg->compid);
     }
     else
         ROS_ERROR("Packet drop: illegal payload64 size");
@@ -84,23 +87,12 @@ GCSAgent::GCSAgent(ros::NodeHandle &nh): _infoRate(5)
 void GCSAgent::publishRosInfo()
 {
     mavlink_message_t msg;
-    char host[20];
+    char host[sizeof(mavlink_ros_info_t::host)];
     gethostname(host, sizeof(host));
-    mavlink_msg_ros_info_pack_chan(1, 1, 0, &msg, 1, host, 1);
+    int hostId = 0;
+    mavlink_msg_ros_info_pack_chan(1, 1, 0, &msg, hostId, 1, host, 1);
 
     send(msg);
-
-    ros::spinOnce();
-    uint8_t data[MAVLINK_MAX_PACKET_LEN + 2 + 7] = {0};
-    int len = mavlink_msg_to_send_buffer(data, &msg);
-
-    mavlink_message_t r;
-    mavlink_status_t status;
-    for(int x = 0; x < len; x++)
-    {
-        if(int ok = mavlink_parse_char(0, data[x], &r, &status))
-            ROS_INFO("Test passed");
-    }
 }
 
 void GCSAgent::spin()
