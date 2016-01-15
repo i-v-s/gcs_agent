@@ -6,8 +6,10 @@
 
 class Launcher: public GCSAgentPlugin
 {
-    std::string exec(const std::string & cmd);
+    void launch(const std::string & cmd);
+    std::string launchPath;
     virtual void onMessage(const mavlink_message_t & message);
+    pid_t _pid;
 public:
     virtual ~Launcher() {}
     Launcher(ros::NodeHandle & nh, GCSAgent * agent);
