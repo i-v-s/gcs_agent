@@ -46,6 +46,12 @@ void GCSAgent::testMavlink(void)
 
 void GCSAgent::send(const mavlink_message_t & message)
 {
+    if(_mavlink_send)
+    {
+        _mavlink_send(message);
+        return;
+    }
+
     auto rmsg = boost::make_shared<mavros_msgs::Mavlink>();
 
     //mavros_msgs::Mavlink rmsg;
@@ -60,28 +66,36 @@ void GCSAgent::subscribe(uint8_t msgid, GCSAgentPlugin * plugin)
     _plugins.insert(std::make_pair(msgid, plugin));
 }
 
-void GCSAgent::onMavlink(const mavros_msgs::Mavlink::ConstPtr rmsg)
+bool GCSAgent::onMavlink(const mavlink_message_t * mmsg)
+{
+    auto plugin = _plugins.find(mmsg->msgid);
+    if(plugin == _plugins.end()) return false;
+    plugin->second->onMessage(*mmsg);
+    return true;
+}
+
+bool GCSAgent::onMavlink(const mavros_msgs::Mavlink::ConstPtr rmsg)
 {
     mavlink_message_t mmsg;
-
+    auto plugin = _plugins.find(rmsg->msgid);
+    if(plugin == _plugins.end()) return false;
     if (mavros_msgs::mavlink::convert(*rmsg, mmsg))
     {
         //ROS_INFO("msgid: %d", mmsg.msgid);
-        auto plugin = _plugins.find(mmsg.msgid);
-        if(plugin != _plugins.end())
-            plugin->second->onMessage(mmsg);
+        plugin->second->onMessage(mmsg);
     }
     else
         ROS_ERROR("Packet drop: illegal payload64 size");
+    return true;
 }
 
 
-GCSAgent::GCSAgent(ros::NodeHandle &nh): _infoRate(5)
+GCSAgent::GCSAgent(ros::NodeHandle &nh): _infoRate(5), _mavlink_send(nullptr)
 {
-    _subMavlink = nh.subscribe("/mavlink/to", 10, &GCSAgent::onMavlink, this);
-    _pubMavlink = nh.advertise<mavros_msgs::Mavlink>("/mavlink/from", 10);
+    //_subMavlink = nh.subscribe("/mavlink/to", 10, &GCSAgent::onMavlink, this);
+    //_pubMavlink = nh.advertise<mavros_msgs::Mavlink>("/mavlink/from", 10);
 
-    testMavlink();
+    //testMavlink();
 }
 
 void GCSAgent::publishRosInfo()
