@@ -28,8 +28,8 @@ private:
     float _infoRate;
     void send(const mavlink_message_t & message);
     void subscribe(uint8_t msgid, GCSAgentPlugin * plugin);
-    void publishRosInfo(void);
 public:
+    void publishRosInfo(void);
     void (* _mavlink_send) (const mavlink_message_t & mmsg);
     bool onMavlink(const mavros_msgs::Mavlink::ConstPtr rmsg);
     bool onMavlink(const mavlink_message_t * mmsg);
